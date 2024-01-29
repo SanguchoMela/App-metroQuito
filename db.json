@@ -1,0 +1,48 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": "1",
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  },
+  "metro": [
+    {
+      "id": "7bc0c8a8-cbb0-4d35-ba5e-eb4e9a1e4b64",
+      "nombre": "Ruta2",
+      "sector": "Centro",
+      "salida": "SanFrancisco",
+      "llegada": "Carolina",
+      "maquinista": "Juan",
+      "detalles": "Ninguno"
+    },
+    {
+      "id": "11b4f9e5-7841-40ef-8bd0-97feceaa2e8d",
+      "nombre": "Ruta3",
+      "sector": "Sur",
+      "salida": "Quitumbe",
+      "llegada": "Recreo",
+      "maquinista": "Marco",
+      "detalles": "Ninguno"
+    },
+    {
+      "id": "e0e9da1f-b29a-46c0-ab4d-50a08efbc073",
+      "nombre": "Ruta1",
+      "sector": "Sur-Norte",
+      "salida": "Magdalena",
+      "llegada": "Carolina",
+      "maquinista": "Juan",
+      "detalles": "Ninguno"
+    }
+  ]
+}
