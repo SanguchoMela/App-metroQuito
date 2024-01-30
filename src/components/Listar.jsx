@@ -2,7 +2,7 @@ import logoMetro from '../assets/tren.webp'
 import Mensajes from './Mensajes'
 import { useState, useEffect } from "react"
 
-const Listar = ({estado}) => {
+const Listar = ({estado,setIdmetro}) => {
 
     const [rutas, setRutas] = useState([])
 
@@ -34,7 +34,9 @@ const Listar = ({estado}) => {
                 await fetch(url, {
                     method: 'DELETE',
                 })
+                // Filtrar las rutas
                 const nuevasRutas = rutas.filter(ruta => ruta.id !== id)
+                // Cargar las rutas filtradas en el setRutas
                 setRutas(nuevasRutas)
             }
         }
@@ -67,7 +69,7 @@ const Listar = ({estado}) => {
                                 <p className="text-gray-500">Maquinista: {ruta.maquinista}</p>
                                 <p className="text-gray-500">Detalles: {ruta.detalles}</p>
                                 <div className='flex justify-between mt-3 lg:justify-end md:justify-end gap-3'>
-                                    <button className='bg-sky-900 text-white px-6 py-1 rounded-full'>Actualizar</button>
+                                    <button className='bg-sky-900 text-white px-6 py-1 rounded-full' onClick={()=>{setIdmetro(ruta.id)}}>Actualizar</button>
                                     <button className='bg-red-900 text-white px-6 py-1 rounded-full' onClick={()=>{handleDelete(ruta.id)}}>Eliminar</button>
                                 </div>
                             </div>

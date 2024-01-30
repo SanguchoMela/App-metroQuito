@@ -1,8 +1,9 @@
 import { useState } from "react"
 import Mensajes from "./Mensajes"
 import { v4 as uuidv4 } from 'uuid'
+import { useEffect } from 'react'
 
-export const Formulario = ({setEstado}) => {
+export const Formulario = ({setEstado,idMetro,setIdmetro}) => {
 
     const [error, setError] = useState(false)
     const [mensaje, setMensaje] = useState(false)
@@ -15,6 +16,37 @@ export const Formulario = ({setEstado}) => {
         detalles:""
     })
 
+    useEffect(() => {
+        // Verificar que exista la variable idMetro
+        if(idMetro)
+        {
+            // Crear una función autoejecutada para consultar el metro en base al id
+            (async function (idMetro) {
+                // Uso del TRY-CATCH
+                try {
+                    // Definir la URL para la ejecución de FETCH y la conversión a un json
+                    const respuesta = await (await fetch(`https://65b819f946324d531d55f238.mockapi.io/metro/${idMetro}`)).json()
+                    // Desestructurar la respuesta
+                    const {id,nombre,sector,salida,llegada,maquinista,detalles} = respuesta
+                    // Actualizando los valores del formulario "objeto"
+                    setform({
+                        ...form,
+                        nombre,
+                        sector,
+                        salida,
+                        llegada,
+                        maquinista,
+                        detalles,
+                        id
+                    })
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            })(idMetro)
+        }
+    }, [idMetro])
+    
     const handleChange  = (e) => { 
         setform({
             ...form,    // Copiar las propiedades del objeto inicial (spread operator)
@@ -34,20 +66,38 @@ export const Formulario = ({setEstado}) => {
             return
         }
         try {
-            const url ="https://65b819f946324d531d55f238.mockapi.io/metro"
-			form.id = uuidv4()
-            await fetch(url,{
-                method:'POST',  // Especificar el tipo de acción
-                body:JSON.stringify(form),  // Convertir la variable form a un JSON
-                headers:{'Content-Type':'application/json'} // Especificar el tipo de contenido
-            })
-            setMensaje(true)
-						setEstado(true)
-            setTimeout(() => {
-                setMensaje(false)
-								setEstado(false)
+
+            if(form.id){
+                const url = `https://65b819f946324d531d55f238.mockapi.io/metro/${form.id}`
+                await fetch(url,{
+                    method:'PUT',
+                    body:JSON.stringify(form),
+                    headers:{'Content-Type':'application/json'}
+                })
+                setEstado(true)
                 setform({})
-            }, 1000);
+                setIdmetro(0)
+				setTimeout(() => {
+                        setEstado(false)
+                    setform({})
+                }, 1000)
+            }
+            else{
+                const url ="https://65b819f946324d531d55f238.mockapi.io/metro"
+                form.id = uuidv4()
+                await fetch(url,{
+                    method:'POST',  // Especificar el tipo de acción
+                    body:JSON.stringify(form),  // Convertir la variable form a un JSON
+                    headers:{'Content-Type':'application/json'} // Especificar el tipo de contenido
+                })
+                setMensaje(true)
+                            setEstado(true)
+                setTimeout(() => {
+                    setMensaje(false)
+                                    setEstado(false)
+                    setform({})
+                }, 1000);
+            }
         } catch (error) {
             console.log(error);
         }
@@ -58,7 +108,7 @@ export const Formulario = ({setEstado}) => {
         <form onSubmit={handleSubmit}>
             
             {error && <Mensajes tipo="bg-red-900">"Existen campos vacíos"</Mensajes>}
-	        {mensaje && <Mensajes tipo="bg-green-900">"Registro exitoso"</Mensajes>}  
+            {mensaje && <Mensajes tipo="bg-green-900">"Registro exitoso"</Mensajes>}  
             
             {/* <Mensajes tipo={"bg-red-900"}>validar campos</Mensajes> */}
             <div>
@@ -149,12 +199,8 @@ export const Formulario = ({setEstado}) => {
                 />
             </div>
 
-            <input
-                type="submit"
-                className='bg-sky-900 w-full p-3 
-        text-white uppercase font-bold rounded-lg 
-        hover:bg-red-900 cursor-pointer transition-all'
-                value='Registrar ruta' />
+            <input type="submit" className='bg-sky-900 w-full p-3 text-white uppercase font-bold rounded-lg hover:bg-red-900 cursor-pointer transition-all' 
+            value={form.id ? "Actualizar ruta" : "Registrar ruta"} />
 
         </form>
     )
